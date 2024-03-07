@@ -1,24 +1,15 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+Bu repo Spring web ile yazılan backend projesinin PrimeReact tarafıdır. Next js kullanılmıştır. Typescript ile yazılmıştır.
 
-## Getting Started
+## Spring Web with PrimeReact Frontend
 
-First, run the development server:
+Çalıştırmak için;
 
 ```bash
+npm install primereact
+# daha sonra
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
-
-## Learn More
-
-To learn more about Next.js, take a look at the following resources:
-
--   [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
--   [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+Proje içerisinde yüz tanıma apisi kullanılmıştır. Futbolcu eklenirken sadece yüz olan fotoğraflara izin vermektedir. Gelişmiş kontrol mekanizması kullanılmıştır.
+Sadece API olarak kullanıma hazırdır. Veriler kullanıcılar tarafından girilmesi için hazırlanmıştır.
+Hazır olarak sadece liglerin puan tabloları ve fikstürler dışarıdan farklı bir endpoint ile alınmıştır.
