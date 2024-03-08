@@ -26,6 +26,8 @@ const PlayersGet = () => {
     const [oyuncuDegeri, setOyuncuDegeri] = useState<string | null>(null);
     const [ulkeler,setUlkeler] = useState<Demo.Ulkeler[]>([]);
     const toast = useRef(null);
+    const [selectedFutbolcu, setSelectedFutbolcu] = useState(null);
+    const [displayDialog, setDisplayDialog] = useState(false);
 
 
     const showToast = (severity:any, summary:any, detail:any,life:any) => {
@@ -259,7 +261,7 @@ const PlayersGet = () => {
                 const response = await axios.request(options);
                 setHasError(response.data.hasError);
                 if(response.data.hasError===true){
-                  showToast('error', 'Hata', 'Bu surata benziyomu aq', 5000);
+                  showToast('error', 'Hata', 'Seçtiğiniz fotoğrafta yüz algılanmadı, başka bir fotoğraf yüklemeyi deneyin', 5000);
                 }else {
                   showToast('success', 'Başarılı', 'Yüz algılandı, işleminize devam edebilirsiniz.', 5000);
                 }
@@ -309,7 +311,54 @@ const PlayersGet = () => {
 
             //Futbolcu silme tanımlamaları
 
-    const header1 = renderHeader1();
+            const header1 = renderHeader1();
+              
+            const showDetailsDialog = (rowData) => {
+              setSelectedFutbolcu(rowData);
+              setDisplayDialog(true);
+            };
+          
+            const hideDetailsDialog = () => {
+              setSelectedFutbolcu(null);
+              setDisplayDialog(false);
+            };
+            const futbolcuDetayHeader = () => (
+              <div className="inline-flex align-items-center justify-content-center gap-2">
+                <img src={`data:image/jpeg;base64,${selectedFutbolcu.filePath}`} alt="Fotoğraf" width="40" height="40" />
+                  <span className="font-bold white-space-nowrap"> {selectedFutbolcu.pName} {selectedFutbolcu.pSurname}</span>
+              </div>
+          );
+            const renderDetailsDialog = () => {
+              if (!selectedFutbolcu) {
+                return null;
+              }
+          
+              return (
+                <Dialog
+                  visible={displayDialog}
+                  onHide={hideDetailsDialog}
+                  header={futbolcuDetayHeader}
+                  modal
+                  style={{ width: '50vw' }}
+                >
+                  {/* Futbolcu detaylarını buraya ekleyin */}
+                  <p>ID: {selectedFutbolcu.id}</p>
+                  <p>Adı: {selectedFutbolcu.pName}</p>
+                  <p>Soyadı: {selectedFutbolcu.pSurname}</p>
+                  <p>Uyruk: {selectedFutbolcu.pCountry}</p>
+                  <p>Kilosu: {selectedFutbolcu.pWeight}</p>
+                  <p>Boyu: {selectedFutbolcu.pHeight}</p>
+                  <p>Mevkisi: {selectedFutbolcu.pPosition}</p>
+                  <p>Yaşı: {selectedFutbolcu.pPlayerAge}</p>
+                  <p>Piyasa Değeri: {selectedFutbolcu.pValue}</p>
+                  <p>Oynadığı Ayak: {selectedFutbolcu.pFoot}</p>
+                  <p>Oynadığı Takım: {selectedFutbolcu.oyuncuHangiTakimda || "Oyuncu Boşta"}</p>
+                  <p>Milli Takımı: {selectedFutbolcu.oyuncuHangiUlkede || "Değer Girilmemiş"}</p>
+                  {/* Diğer detayları ekleyin */}
+                </Dialog>
+              );
+            };
+          
 
     return (
         <div className="grid">
@@ -485,7 +534,9 @@ const PlayersGet = () => {
                         <Column field="pPosition" header="Mevkisi" style={{ minWidth: '12rem' }} />
                         <Column field="oyuncuHangiTakimda" header="Takımı" style={{ minWidth: '8rem' }}/>
                         <Column body={(rowData: Demo.Futbolcu) => (<Button icon="pi pi-trash" onClick={() => oyuncuyuSil(rowData.id)} className="p-button-danger"/>)} style={{ minWidth: '5rem' }}/>
+                        <Column body={(rowData) => (<Button icon="pi pi-search" onClick={() => showDetailsDialog(rowData)} /> )} />
                     </DataTable>
+                    {renderDetailsDialog()}
                 </div>
             </div>
         </div>

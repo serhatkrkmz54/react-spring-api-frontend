@@ -76,8 +76,17 @@ declare namespace Demo {
 
     interface Futbolcu {
         id: number;
+        pName: string;
+        pSurname: string;
         filePath: string; 
-        pValue: string;     
+        pCountry: string;
+        pWeight: number;
+        pHeight: number;
+        pPosition: string;
+        pPlayerAge: number;
+        pFoot: string; 
+        toTeams: Takim[];
+        toCountry: Ulkeler[];
      }
 
 
