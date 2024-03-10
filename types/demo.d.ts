@@ -93,20 +93,22 @@ declare namespace Demo {
      interface Takim {
         id: number;
         tName: string;
+        filePath: string;
     }
+
     interface Ulkeler {
         id: number;
         cName: string;
     }
 
-    interface Country {
+    interface Ayak {
         name: string;
         code: string;
     }
-
-    interface Member {
+    
+    interface Mevki {
         name: string;
-        image: string;
+        code: string;
     }
 
     interface DialogConfig {

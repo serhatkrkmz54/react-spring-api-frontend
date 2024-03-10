@@ -21,7 +21,7 @@ export const getFutbolcular = async () => {
 export const getTakimlar = async () => {
     try {
         const response = await axios.get(`${BASE_URL}/teamss`);
-        return response.data.map((takim: any) => ({ id: takim.id, tName: takim.tName }));
+        return response.data.map((takim: any) => ({ id: takim.id, tName: takim.tName, filePath: takim.filePath }));
     } catch (error) {
         console.error("Takım verisi getirilirken hata oluştu:", error);
         throw error;
@@ -44,12 +44,26 @@ export const getUlkeler = async () => {
 
 // Ülkeleri CountryResource rest controllerden getiren kod.
 
+// Takımın içindeki oyuncuları görme
+
+export const getPlayersInTeams = async (id:number) => {
+  try {
+    const response = await axios.get(`${BASE_URL}/teamss/${id}/oyuncular`);
+    return response.data.map((o:any) => ({adi: o.pName, soyadi: o.pSurname, ulke: o.pCountry, kilo: o.pWeight, boy: o.pHeight, mevki: o.pPosition, yas: o.pPlayerAge, deger: o.pValue, ayak: o.pFoot, tName: o.toTeams }))
+  } catch(error) {
+    console.error("Veriler getirilirken hata oluştu",error);
+    throw error;
+  }
+};
+
+// Takımın içindeki oyuncuları görme
+
 // Oyuncu Ekleme kısmı buradan yapılıyor.
 
   export const postFutbolcu = async (formData:any) => {
     try {
       const response = await axios.post(`${BASE_URL}/playerss`, formData, {
-        timeout: 500,
+        timeout: 200,
         headers: {
           'Content-Type': 'multipart/form-data',
         },
@@ -90,3 +104,4 @@ export const getToplamOyuncuDegeri = async () => {
 };
 
 // Toplam Oyuncu Değeri buradan geliyor.Springte PlayersResource'de oyuncuToplamDeger mappingi ile geliyor.
+
