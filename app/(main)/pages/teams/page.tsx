@@ -6,6 +6,8 @@ import { Column } from 'primereact/column';
 import * as api from '../../../api/SpringAxios';
 import { Dialog } from 'primereact/dialog';
 import type { Demo } from '@/types';
+import { Button } from 'primereact/button';
+import { classNames } from 'primereact/utils';
 
 
 const TeamsGet = () => {
@@ -42,7 +44,45 @@ const TeamsGet = () => {
     }
   };
 
+  const takimLogoBase64 = (base64Data: string) => {
+    return <div style={{
+    borderRadius: '50%',
+    overflow: 'hidden',
+    width: '40px',
+    height: '40px'}}>
+      <img src={`data:image/png;base64,${base64Data}`} alt="Oyuncu Fotoğrafı" className="shadow-5 border-round" style={{ width: '100%', height: '100%' }} />
+    </div>;
+  };
 
+  const formatTValue = (value: string) => {
+    const numericValue = parseFloat(value.replace(/[.,]/g, '').replace(',', '.'));
+
+    if (!isNaN(numericValue)) {
+        let formattedValue: string;
+
+        if (numericValue >= 1000000) {
+            formattedValue = `${(numericValue / 1000000).toFixed(2)} Milyon`;
+        } else if (numericValue >= 1000) {
+            formattedValue = `${(numericValue / 1000).toFixed(2)} Bin`;
+        } else {
+            formattedValue = numericValue.toFixed(2);
+        }
+
+        return `€${formattedValue}`;
+    } else {
+        return 'Geçerli bir değer yok';
+    }
+};
+
+const yasTemplate = (rowData: Demo.Futbolcu) => {
+  const oyuncuYas = classNames('border-circle w-2rem h-2rem inline-flex font-bold justify-content-center align-items-center text-sm', {
+      'bg-blue-100 text-blue-900': rowData.yas == 0,
+      'bg-teal-200 text-teal-900': rowData.yas > 0 && rowData.yas <= 32,
+      'bg-red-100 text-red-900': rowData.yas >= 33
+  });
+
+  return <div className={oyuncuYas}>{rowData.yas}</div>;
+};
 //   const [teams, setTeams] = useState([]);
   
   
@@ -92,28 +132,29 @@ const TeamsGet = () => {
           <Column field="stats.goalDifference" header="Averaj"></Column>
           <Column field="stats.points" header="Puan"></Column>
       </DataTable> */}
-      <DataTable value={teams} tableStyle={{ minWidth: '50rem' }}>
-        <Column field="id" header="ID"></Column>
-        <Column field="tName" header="Team Name"></Column>
-        <Column
-          body={(rowData) => (
-            <button onClick={() => handleTeamSelection(rowData.id)}>Show Players</button>
-          )}
-        ></Column>
+      <DataTable value={teams} emptyMessage="Takım bulunamadı." tableStyle={{ minWidth: '50rem' }}>
+        {/* <Column field="id" header="ID" style={{ width: '5rem' }}></Column> */}
+        <Column field="filePath" header="Logo" style={{ width: '8rem' }} body={(rowData: Demo.Takim) => takimLogoBase64(rowData.filePath)} />
+        <Column field="tName" style={{ fontWeight: 'bold', color:'#4C5D8B' }} header="Takım Adı"></Column>
+        <Column field="tPoint" header="Takım Puanı"/>
+        <Column field="tValue" header="Takımın Piyasa Değeri" body={(rowData: Demo.Takim)=> formatTValue(rowData.tValue.toString())}/>
+        <Column field="takimHangiUlkede" header="Takımın Ülkesi"/>
+        <Column header="Takım Kadrosu" body={(rowData) => (<Button label="Takım Kadrosu" onClick={() => handleTeamSelection(rowData.id)} severity='danger'/>)} />
       </DataTable>
-      <Dialog header={dialogHeader} visible={visible} style={{ width: '50vw' }} onHide={() => setVisible(false)}>
+      <Dialog header={dialogHeader} visible={visible} style={{ width: '70vw' }} onHide={() => setVisible(false)}>
 
       {selectedTeam && (
-        <DataTable value={players} tableStyle={{ minWidth: '50rem' }}>
-          <Column field="adi" header="Name"></Column>
-          <Column field="soyadi" header="Surname"></Column>
-          <Column field="ulke" header="Country"></Column>
-          <Column field="kilo" header="Weight"></Column>
-          <Column field="boy" header="Height"></Column>
-          <Column field="mevki" header="Position"></Column>
-          <Column field="yas" header="Age"></Column>
-          <Column field="deger" header="Value"></Column>
-          <Column field="ayak" header="Foot"></Column>
+        <DataTable value={players} resizableColumns showGridlines columnResizeMode="expand" emptyMessage="Kadroya Oyuncu Eklenmemiş." tableStyle={{ minWidth: '60rem' }}>
+          <Column field="resim" header="#" body={(rowData:Demo.Takim) => takimLogoBase64(rowData.resim)} />
+          <Column field="adi" header="Adı"></Column>
+          <Column field="soyadi" header="Soyadı"></Column>
+          <Column field="ulke" header="Uyruk"></Column>
+          <Column field="kilo" header="Kilo"></Column>
+          <Column field="boy" header="Boy"></Column>
+          <Column field="mevki" header="Mevkisi"></Column>
+          <Column field="yas" body={yasTemplate} header="Yaş"></Column>
+          <Column field="deger" body={(rowData: Demo.Takim)=> formatTValue(rowData.deger.toString())} header="Piyasa Değeri"></Column>
+          <Column field="ayak" header="Oynadığı Ayak"></Column>
         </DataTable>
       )}
       </Dialog>

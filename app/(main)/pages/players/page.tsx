@@ -569,7 +569,7 @@ const PlayersGet = () => {
                         <Column field="pName" header="Adı" style={{ minWidth: '12rem', fontWeight: 'bold'}} />
                         <Column field="pSurname" header="Soyadı" style={{ minWidth: '14rem', fontWeight: 'bold'}}/>
                         <Column field="pPlayerAge" header="Yaşı" style={{ minWidth: '7rem' }}/>
-                        <Column field="pValue" header="Piyasa Değeri" body={(rowData: Demo.Futbolcu) => formatPValue(rowData.pValue)} style={{ minWidth: '10rem' }}/>
+                        <Column field="pValue" header="Piyasa Değeri" body={(rowData: Demo.Futbolcu) => formatPValue(rowData.pValue.toString())} style={{ minWidth: '10rem' }}/>
                         <Column field="pCountry" header="Uyruk" style={{ minWidth: '12rem' }} />
                         <Column field="pPosition" header="Mevkisi" style={{ minWidth: '12rem' }} />
                         <Column field="oyuncuHangiTakimda" header="Takımı" style={{ minWidth: '8rem' }}/>

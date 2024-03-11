@@ -21,7 +21,7 @@ export const getFutbolcular = async () => {
 export const getTakimlar = async () => {
     try {
         const response = await axios.get(`${BASE_URL}/teamss`);
-        return response.data.map((takim: any) => ({ id: takim.id, tName: takim.tName, filePath: takim.filePath }));
+        return response.data;
     } catch (error) {
         console.error("Takım verisi getirilirken hata oluştu:", error);
         throw error;
@@ -49,7 +49,7 @@ export const getUlkeler = async () => {
 export const getPlayersInTeams = async (id:number) => {
   try {
     const response = await axios.get(`${BASE_URL}/teamss/${id}/oyuncular`);
-    return response.data.map((o:any) => ({adi: o.pName, soyadi: o.pSurname, ulke: o.pCountry, kilo: o.pWeight, boy: o.pHeight, mevki: o.pPosition, yas: o.pPlayerAge, deger: o.pValue, ayak: o.pFoot, tName: o.toTeams }))
+    return response.data.map((o:any) => ({adi: o.pName, soyadi: o.pSurname, ulke: o.pCountry, kilo: o.pWeight, boy: o.pHeight, mevki: o.pPosition, yas: o.pPlayerAge, deger: o.pValue, ayak: o.pFoot, tName: o.toTeams, resim: o.filePath }))
   } catch(error) {
     console.error("Veriler getirilirken hata oluştu",error);
     throw error;

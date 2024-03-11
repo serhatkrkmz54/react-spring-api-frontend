@@ -79,11 +79,13 @@ declare namespace Demo {
         pName: string;
         pSurname: string;
         filePath: string; 
+        pValue: number;
         pCountry: string;
         pWeight: number;
         pHeight: number;
         pPosition: string;
         pPlayerAge: number;
+        yas: number;
         pFoot: string; 
         toTeams: Takim[];
         toCountry: Ulkeler[];
@@ -94,6 +96,9 @@ declare namespace Demo {
         id: number;
         tName: string;
         filePath: string;
+        tValue: number;
+        deger: number;
+        resim:string;
     }
 
     interface Ulkeler {
