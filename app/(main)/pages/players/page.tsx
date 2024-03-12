@@ -196,11 +196,11 @@ const PlayersGet = () => {
            const [adi, setAdi] = useState('');
            const [soyadi, setSoyadi] = useState('');
            const [uyruk, setUyruk] = useState('');
-           const [kilo, setKilo] = useState<number>();
-           const [boy, setBoy] = useState<number>();
+           const [kilo, setKilo] = useState<number | undefined | null>();
+           const [boy, setBoy] = useState<number | undefined | null>();
            const [mevki, setMevki] = useState<Demo.Mevki | null>(null);
-           const [yas, setYas] = useState<number>();
-           const [deger, setDeger] = useState<number>();
+           const [yas, setYas] = useState<number | undefined | null>();
+           const [deger, setDeger] = useState<number | undefined | null>();
            const [ayak, setAyak] = useState<Demo.Ayak | null>(null);
            const [selectedTeam, setSelectedTeam] = useState<Demo.Takim | null>(null);
            const [selectedCountry, setSelectedCountry] = useState<Demo.Ulkeler | null>(null);
@@ -278,7 +278,12 @@ const PlayersGet = () => {
 
            const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
             const file = e.target.files?.[0];
-        
+            const fileName = e.target.value.split(/(\\|\/)/).pop(); // Dosya adını alma işlemi
+            const parentWrapper = e.target.closest('.file-upload-wrapper'); // Parent wrapper'ı bulma işlemi
+            if (parentWrapper) {
+                parentWrapper.dataset.text = fileName; // Parent wrapper'a dosya adını ata
+            }
+            
             if (file) {
               const data = new FormData();
               data.append('photo', file);
@@ -449,14 +454,19 @@ const PlayersGet = () => {
             
             <Dialog header="Futbolcu Ekle" visible={visible} style={{ width: '60rem' }} breakpoints={{ '960px': '75vw', '641px': '90vw' }} modal className="p-fluid" onHide={() => setVisible(false)}>
             <form onSubmit={handleSubmit}>
-                <div className="card" style={{ display: 'flex', alignItems: 'center', padding: '20px ' }}>
-                <input type="file" accept="image/*" ref={fileUploadRef} onChange={handleFileChange} />
+                    <label htmlFor="pName" className="font-bold">
+                        Fotoğraf
+                    </label>
+                <div className="card" style={{ display: 'flex', alignItems: 'center', padding: '10px ', marginTop:'10px' }}>
+                    <div className="file-upload-wrapper" data-text="Fotoğraf Yükleyin!">
+                      <input ref={fileUploadRef} type="file" onChange={handleFileChange} className="file-upload-field" />
+                    </div>
                     {selectedFile && (
                         <div>
-                        {previewImage && (<img src={previewImage} alt="Dosya Önizleme" style={{ maxWidth: '100px', maxHeight: '70px', borderRadius: '50%', marginLeft: '10px' }} /> )}
+                        {previewImage && (<img src={previewImage} alt="Dosya Önizleme" style={{ maxWidth: '100px', maxHeight: '70px',  marginRight: '50px' }} /> )}
                         </div>
                     )}
-                    </div>
+                 </div>
                  <div className="field">
                     <label htmlFor="pName" className="font-bold">
                         Adı
@@ -493,8 +503,6 @@ const PlayersGet = () => {
                         Mevkisi
                     </label>
                     <Dropdown value={mevki} onChange={(e: DropdownChangeEvent) => setMevki(e.value)} options={mevkiler} optionLabel="name" optionValue='name' placeholder="Oynadığı Mevki" />
-
-                    {/* <InputText id="pPosition" placeholder="Mevkisini giriniz" value={mevki} onChange={(e) => setMevki(e.target.value)} tooltip="Futbolcunun oynadığı mevkiyi giriniz" tooltipOptions={{ position: 'bottom' }} aria-describedby="username-help" /> */}
                 </div>
                 <div className="field">
                     <label htmlFor="pPlayerAge" className="font-bold">

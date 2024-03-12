@@ -50,7 +50,16 @@ const TeamsGet = () => {
     overflow: 'hidden',
     width: '40px',
     height: '40px'}}>
-      <img src={`data:image/png;base64,${base64Data}`} alt="Oyuncu Fotoğrafı" className="shadow-5 border-round" style={{ width: '100%', height: '100%' }} />
+      <img src={`data:image/png;base64,${base64Data}`} alt="Oyuncu Fotoğrafı" style={{ width: '100%', height: '100%' }} />
+    </div>;
+  };
+
+  const oyuncuLogoBase64 = (base64Data: string) => {
+    return <div style={{
+    overflow: 'hidden',
+    width: '50px',
+    height: '50px'}}>
+      <img src={`data:image/png;base64,${base64Data}`} alt="Oyuncu Fotoğrafı" style={{ width: '100%', height: '100%' }} />
     </div>;
   };
 
@@ -145,7 +154,7 @@ const yasTemplate = (rowData: Demo.Futbolcu) => {
 
       {selectedTeam && (
         <DataTable value={players} resizableColumns showGridlines columnResizeMode="expand" emptyMessage="Kadroya Oyuncu Eklenmemiş." tableStyle={{ minWidth: '60rem' }}>
-          <Column field="resim" header="#" body={(rowData:Demo.Takim) => takimLogoBase64(rowData.resim)} />
+          <Column field="resim" header="#" body={(rowData:Demo.Takim) => oyuncuLogoBase64(rowData.resim)} />
           <Column field="adi" header="Adı"></Column>
           <Column field="soyadi" header="Soyadı"></Column>
           <Column field="ulke" header="Uyruk"></Column>
