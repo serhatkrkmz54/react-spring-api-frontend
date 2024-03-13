@@ -1,5 +1,4 @@
 'use client';
-import axios from 'axios';
 import React, { use, useEffect, useState, useRef } from 'react';
 import { DataTable } from 'primereact/datatable';
 import { Column } from 'primereact/column';
@@ -32,7 +31,6 @@ const TeamsGet = () => {
 
   const handleTeamSelection = async (selectedTeamId:any) => {
     try {
-      // Seçilen takımın futbolcularını getir
       const playersData = await api.getPlayersInTeams(selectedTeamId);
       setPlayers(playersData);
       setVisible(true);
@@ -40,7 +38,6 @@ const TeamsGet = () => {
       const teamName = teams?.find((team:Demo.Takim) => team.id === selectedTeamId)?.tName; // Takım ismini bul
       setDialogHeader(`${teamName} kadrosu`)
     } catch (error) {
-      // Hata yönetimi burada
     }
   };
 
@@ -141,7 +138,7 @@ const yasTemplate = (rowData: Demo.Futbolcu) => {
           <Column field="stats.goalDifference" header="Averaj"></Column>
           <Column field="stats.points" header="Puan"></Column>
       </DataTable> */}
-      <DataTable value={teams} emptyMessage="Takım bulunamadı." tableStyle={{ minWidth: '50rem' }}>
+      <DataTable value={teams} paginator rows={5} rowsPerPageOptions={[5, 10, 25, 50]} emptyMessage="Takım bulunamadı." tableStyle={{ minWidth: '50rem' }}>
         {/* <Column field="id" header="ID" style={{ width: '5rem' }}></Column> */}
         <Column field="filePath" header="Logo" style={{ width: '8rem' }} body={(rowData: Demo.Takim) => takimLogoBase64(rowData.filePath)} />
         <Column field="tName" style={{ fontWeight: 'bold', color:'#4C5D8B' }} header="Takım Adı"></Column>
@@ -155,6 +152,7 @@ const yasTemplate = (rowData: Demo.Futbolcu) => {
       {selectedTeam && (
         <DataTable value={players} resizableColumns showGridlines columnResizeMode="expand" emptyMessage="Kadroya Oyuncu Eklenmemiş." tableStyle={{ minWidth: '60rem' }}>
           <Column field="resim" header="#" body={(rowData:Demo.Takim) => oyuncuLogoBase64(rowData.resim)} />
+          <Column field="formaNo" header="Forma Numarası"></Column>
           <Column field="adi" header="Adı"></Column>
           <Column field="soyadi" header="Soyadı"></Column>
           <Column field="ulke" header="Uyruk"></Column>

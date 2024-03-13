@@ -49,7 +49,7 @@ export const getUlkeler = async () => {
 export const getPlayersInTeams = async (id:number) => {
   try {
     const response = await axios.get(`${BASE_URL}/teamss/${id}/oyuncular`);
-    return response.data.map((o:any) => ({adi: o.pName, soyadi: o.pSurname, ulke: o.pCountry, kilo: o.pWeight, boy: o.pHeight, mevki: o.pPosition, yas: o.pPlayerAge, deger: o.pValue, ayak: o.pFoot, tName: o.toTeams, resim: o.filePath }))
+    return response.data.map((o:any) => ({adi: o.pName, soyadi: o.pSurname, ulke: o.pCountry, kilo: o.pWeight, boy: o.pHeight, mevki: o.pPosition, yas: o.pPlayerAge, deger: o.pValue, ayak: o.pFoot, tName: o.toTeams, resim: o.filePath, formaNo: o.formaNo }))
   } catch(error) {
     console.error("Veriler getirilirken hata oluştu",error);
     throw error;
@@ -63,7 +63,6 @@ export const getPlayersInTeams = async (id:number) => {
   export const postFutbolcu = async (formData:any) => {
     try {
       const response = await axios.post(`${BASE_URL}/playerss`, formData, {
-        timeout: 200,
         headers: {
           'Content-Type': 'multipart/form-data',
         },

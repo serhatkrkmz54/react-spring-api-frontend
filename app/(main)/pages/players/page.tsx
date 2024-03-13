@@ -14,7 +14,9 @@ import { Dropdown, DropdownChangeEvent } from 'primereact/dropdown';
 import { Toast } from 'primereact/toast';
 import { ConfirmDialog, confirmDialog } from 'primereact/confirmdialog';
 import * as api from '../../../api/SpringAxios';
-
+import { Avatar } from 'primereact/avatar';
+import { AvatarGroup } from 'primereact/avatargroup';
+import { ScrollTop } from 'primereact/scrolltop';
 
 const PlayersGet = () => {
     const [filters1, setFilters1] = useState<DataTableFilterMeta>({});
@@ -196,6 +198,7 @@ const PlayersGet = () => {
            const [adi, setAdi] = useState('');
            const [soyadi, setSoyadi] = useState('');
            const [uyruk, setUyruk] = useState('');
+           const [formaNo, setFormaNo] = useState<number | undefined | null>();
            const [kilo, setKilo] = useState<number | undefined | null>();
            const [boy, setBoy] = useState<number | undefined | null>();
            const [mevki, setMevki] = useState<Demo.Mevki | null>(null);
@@ -251,6 +254,7 @@ const PlayersGet = () => {
               const formData = new FormData();
               formData.append('pName', adi);
               formData.append('pSurname', soyadi);
+              formData.append('formaNo', formaNo?.toString() || '');
               formData.append('pCountry', uyruk);
               formData.append('pWeight', kilo?.toString() || '');
               formData.append('pHeight', boy?.toString() || '');
@@ -278,10 +282,14 @@ const PlayersGet = () => {
 
            const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
             const file = e.target.files?.[0];
-            const fileName = e.target.value.split(/(\\|\/)/).pop(); // Dosya adını alma işlemi
-            const parentWrapper = e.target.closest('.file-upload-wrapper'); // Parent wrapper'ı bulma işlemi
+            const fileName = e.target.value.split(/(\\|\/)/).pop(); 
+            let truncatedFileName = fileName;
+            if (fileName.length > 40) {
+                truncatedFileName = fileName.substring(0, 37) + '...'; 
+            }
+            const parentWrapper = e.target.closest('.file-upload-wrapper');
             if (parentWrapper) {
-                parentWrapper.dataset.text = fileName; // Parent wrapper'a dosya adını ata
+                parentWrapper.dataset.text = truncatedFileName;
             }
             
             if (file) {
@@ -364,8 +372,8 @@ const PlayersGet = () => {
             };
             const futbolcuDetayHeader = () => (
               <div className="inline-flex align-items-center justify-content-center gap-2">
-                <img src={`data:image/jpeg;base64,${selectedFutbolcu.filePath}`} alt="Fotoğraf" width="40" height="40" />
-                  <span className="font-bold white-space-nowrap"> {selectedFutbolcu.pName} {selectedFutbolcu.pSurname}</span>
+                <img src={`data:image/jpeg;base64,${selectedFutbolcu?.filePath}`} alt="Fotoğraf" width="40" height="40" />
+                  <span className="font-bold white-space-nowrap"> {selectedFutbolcu?.pName} {selectedFutbolcu?.pSurname}</span>
               </div>
           );
             const renderDetailsDialog = () => {
@@ -385,6 +393,7 @@ const PlayersGet = () => {
                   <p>ID: {selectedFutbolcu.id}</p>
                   <p>Adı: {selectedFutbolcu.pName}</p>
                   <p>Soyadı: {selectedFutbolcu.pSurname}</p>
+                  <p>Forma Numarası: {selectedFutbolcu.formaNo}</p>
                   <p>Uyruk: {selectedFutbolcu.pCountry}</p>
                   <p>Kilosu: {selectedFutbolcu.pWeight}</p>
                   <p>Boyu: {selectedFutbolcu.pHeight}</p>
@@ -393,7 +402,7 @@ const PlayersGet = () => {
                   <p>Piyasa Değeri: {selectedFutbolcu.pValue}</p>
                   <p>Oynadığı Ayak: {selectedFutbolcu.pFoot}</p>
                   <p>Oynadığı Takım: {selectedFutbolcu.oyuncuHangiTakimda || "Oyuncu Boşta"}</p>
-                  <p>Milli Takımı: {selectedFutbolcu.oyuncuHangiUlkede || "Değer Girilmemiş"}</p>
+                  <p>Milli Takımı: {selectedFutbolcu?.oyuncuHangiUlkede || "Değer Girilmemiş"}</p>
                   {/* Diğer detayları ekleyin */}
                 </Dialog>
               );
@@ -416,10 +425,17 @@ const PlayersGet = () => {
                         </div>
                     </div>
                     <div className="flex items-center">
-                        <img src="https://img.a.transfermarkt.technology/portrait/big/28396-1696447661.png?lm=1" alt="" style={{ width: '35px', height: '40px', borderRadius: '50%', overflow: 'hidden', display: 'block', marginRight: '-18px' }}/>
+                    <AvatarGroup>
+                        <Avatar image="https://img.a.transfermarkt.technology/portrait/big/28396-1696447661.png?lm=1" size="large" shape="circle" />
+                        <Avatar image="https://img.a.transfermarkt.technology/portrait/big/28003-1694590254.jpg?lm=1" size="large" shape="circle" />
+                        <Avatar image="https://img.a.transfermarkt.technology/portrait/big/8198-1694609670.jpg?lm=1" size="large" shape="circle" />
+                        <Avatar image="https://img.a.transfermarkt.technology/portrait/big/191614-1698609730.png?lm=1" size="large" shape="circle" />
+                        <Avatar label="+" shape="circle" size="large"/>
+                    </AvatarGroup>
+                        {/* <img src="https://img.a.transfermarkt.technology/portrait/big/28396-1696447661.png?lm=1" alt="" style={{ width: '35px', height: '40px', borderRadius: '50%', overflow: 'hidden', display: 'block', marginRight: '-18px' }}/>
                         <img src="https://img.a.transfermarkt.technology/portrait/big/28003-1694590254.jpg?lm=1" alt="" style={{ width: '35px', height: '40px', borderRadius: '50%', overflow: 'hidden', display: 'block', marginRight: '-18px' }}/>
                         <img src="https://img.a.transfermarkt.technology/portrait/big/8198-1694609670.jpg?lm=1" alt="" style={{ width: '35px', height: '40px', borderRadius: '50%', overflow: 'hidden', display: 'block', marginRight: '-18px' }}/>
-                        <img src="https://img.a.transfermarkt.technology/portrait/big/191614-1698609730.png?lm=1" alt="" style={{ width: '35px', height: '40px', borderRadius: '50%', overflow: 'hidden', display: 'block', marginRight: '-18px' }}/>
+                        <img src="https://img.a.transfermarkt.technology/portrait/big/191614-1698609730.png?lm=1" alt="" style={{ width: '35px', height: '40px', borderRadius: '50%', overflow: 'hidden', display: 'block', marginRight: '-18px' }}/> */}
                     </div>
                 </div>
             </div>
@@ -479,6 +495,12 @@ const PlayersGet = () => {
                         Soyadı
                     </label>
                     <InputText id="pSurname" placeholder="Soyadını giriniz" value={soyadi} onChange={(e) => setSoyadi(e.target.value)} tooltip="Futbolcunun tam soyadını giriniz" tooltipOptions={{ position: 'bottom' }} aria-describedby="username-help" />
+                </div>
+                <div className="field">
+                    <label htmlFor="formaNo" className="font-bold">
+                        Forma Numarası
+                    </label>
+                    <InputNumber inputId="withoutgrouping" value={formaNo} onValueChange={(e: InputNumberValueChangeEvent) => setFormaNo(e.value)} useGrouping={false} tooltip="Futbolcunun güncel forma numarasını giriniz" tooltipOptions={{ position: 'bottom' }} placeholder="Forma numarasını giriniz"/>
                 </div>
                 <div className="field">
                     <label htmlFor="pCountry" className="font-bold">
@@ -587,7 +609,9 @@ const PlayersGet = () => {
                     {renderDetailsDialog()}
                 </div>
             </div>
+            
         </div>
+        
     );
 };
 

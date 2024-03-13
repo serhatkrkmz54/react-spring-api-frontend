@@ -79,6 +79,7 @@ declare namespace Demo {
         pName: string;
         pSurname: string;
         filePath: string; 
+        formaNo: number;
         pValue: number;
         pCountry: string;
         pWeight: number;
