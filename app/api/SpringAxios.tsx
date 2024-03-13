@@ -14,6 +14,19 @@ export const getFutbolcular = async () => {
     }
   };
 
+export const updateFutbolcular = async (id:any, formData:any) => {
+  try {
+    const response = await axios.put(`${BASE_URL}/playerss/${id}`, formData, {
+      headers: {
+        'Content-Type': 'multipart/form-data',
+      },
+    });
+    return response.data;
+  } catch (error) {
+    console.error('Hata oluştu:', error);
+    throw error;
+  }
+}
 // Futbolcuları PlayersResource rest controllerden getiren kod.
 
 // Takımları TeamsResource rest controllerden getiren kod.

@@ -285,7 +285,7 @@ const PlayersGet = () => {
             const fileName = e.target.value.split(/(\\|\/)/).pop(); 
             let truncatedFileName = fileName;
             if (fileName.length > 40) {
-                truncatedFileName = fileName.substring(0, 37) + '...'; 
+                truncatedFileName = fileName?.substring(0, 37) + '...'; 
             }
             const parentWrapper = e.target.closest('.file-upload-wrapper');
             if (parentWrapper) {
@@ -333,6 +333,7 @@ const PlayersGet = () => {
               };
 
             //Futbolcu Ekleme tanımlamaları
+
 
             //Futbolcu silme tanımlamaları
 

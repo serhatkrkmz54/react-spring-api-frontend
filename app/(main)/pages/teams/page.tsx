@@ -7,6 +7,7 @@ import { Dialog } from 'primereact/dialog';
 import type { Demo } from '@/types';
 import { Button } from 'primereact/button';
 import { classNames } from 'primereact/utils';
+import { Badge } from 'primereact/badge';
 
 
 const TeamsGet = () => {
@@ -89,6 +90,17 @@ const yasTemplate = (rowData: Demo.Futbolcu) => {
 
   return <div className={oyuncuYas}>{rowData.yas}</div>;
 };
+
+const oyuncuFormaNo = (rowData: Demo.Futbolcu) => {
+  if(rowData.formaNo === null || rowData.formaNo === undefined){
+    return (
+      <Badge value="Yok" severity="warning" />
+    );
+  }else {
+  return (
+  <Badge value={rowData.formaNo} size="large" severity="info" style={{ fontWeight: "bold" }} />
+  );}
+};
 //   const [teams, setTeams] = useState([]);
   
   
@@ -151,17 +163,17 @@ const yasTemplate = (rowData: Demo.Futbolcu) => {
 
       {selectedTeam && (
         <DataTable value={players} resizableColumns showGridlines columnResizeMode="expand" emptyMessage="Kadroya Oyuncu Eklenmemiş." tableStyle={{ minWidth: '60rem' }}>
-          <Column field="resim" header="#" body={(rowData:Demo.Takim) => oyuncuLogoBase64(rowData.resim)} />
-          <Column field="formaNo" header="Forma Numarası"></Column>
+          <Column field="resim" header="" body={(rowData:Demo.Takim) => oyuncuLogoBase64(rowData.resim)} style={{ width: '2rem' }} />
+          <Column field="formaNo" body={oyuncuFormaNo} header="Forma" style={{ width: '4rem' }}></Column>
           <Column field="adi" header="Adı"></Column>
           <Column field="soyadi" header="Soyadı"></Column>
           <Column field="ulke" header="Uyruk"></Column>
-          <Column field="kilo" header="Kilo"></Column>
-          <Column field="boy" header="Boy"></Column>
-          <Column field="mevki" header="Mevkisi"></Column>
-          <Column field="yas" body={yasTemplate} header="Yaş"></Column>
+          <Column field="mevki" header="Mevkisi" style={{ width: '6rem' }}></Column>
+          <Column field="kilo" header="Kilo" style={{ width: '3rem' }}></Column>
+          <Column field="boy" header="Boy" style={{ width: '3rem' }}></Column>
+          <Column field="yas" body={yasTemplate} header="Yaş" style={{ width: '2rem' }} ></Column>
           <Column field="deger" body={(rowData: Demo.Takim)=> formatTValue(rowData.deger.toString())} header="Piyasa Değeri"></Column>
-          <Column field="ayak" header="Oynadığı Ayak"></Column>
+          <Column field="ayak" header="Oynadığı Ayak" style={{ width: '7rem' }}></Column>
         </DataTable>
       )}
       </Dialog>
