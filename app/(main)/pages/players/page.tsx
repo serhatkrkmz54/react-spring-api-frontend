@@ -394,7 +394,7 @@ const PlayersGet = () => {
                   <p>ID: {selectedFutbolcu.id}</p>
                   <p>Adı: {selectedFutbolcu.pName}</p>
                   <p>Soyadı: {selectedFutbolcu.pSurname}</p>
-                  <p>Forma Numarası: {selectedFutbolcu.formaNo}</p>
+                  <p>Forma Numarası: {selectedFutbolcu.formaNo || "Yok"}</p>
                   <p>Uyruk: {selectedFutbolcu.pCountry}</p>
                   <p>Kilosu: {selectedFutbolcu.pWeight}</p>
                   <p>Boyu: {selectedFutbolcu.pHeight}</p>
