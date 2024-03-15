@@ -6,7 +6,7 @@ import { Button } from 'primereact/button';
 import { Column } from 'primereact/column';
 import { DataTable, DataTableFilterMeta } from 'primereact/datatable';
 import { InputText } from 'primereact/inputtext';
-import React, { use, useEffect, useState, useRef } from 'react';
+import React, { use, useEffect, useState, useRef, Suspense } from 'react';
 import type { Demo } from '@/types';
 import { InputNumber, InputNumberValueChangeEvent } from 'primereact/inputnumber';
 import { ListBox, ListBoxChangeEvent } from 'primereact/listbox';
@@ -16,7 +16,8 @@ import { ConfirmDialog, confirmDialog } from 'primereact/confirmdialog';
 import * as api from '../../../api/SpringAxios';
 import { Avatar } from 'primereact/avatar';
 import { AvatarGroup } from 'primereact/avatargroup';
-import { ScrollTop } from 'primereact/scrolltop';
+import { ProgressSpinner } from 'primereact/progressspinner';
+
 
 const PlayersGet = () => {
     const [filters1, setFilters1] = useState<DataTableFilterMeta>({});
@@ -30,6 +31,7 @@ const PlayersGet = () => {
     const toast = useRef(null);
     const [selectedFutbolcu, setSelectedFutbolcu] = useState(null);
     const [displayDialog, setDisplayDialog] = useState(false);
+    const [loading, setLoading] = useState(true);
 
 
     const showToast = (severity:any, summary:any, detail:any,life:any) => {
@@ -334,8 +336,7 @@ const PlayersGet = () => {
 
             //Futbolcu Ekleme tanımlamaları
 
-
-            //Futbolcu silme tanımlamaları
+             //Futbolcu silme tanımlamaları
 
             const oyuncuyuSil = async (id:number) => {
                 const confirmDialogOptions = {
@@ -409,6 +410,23 @@ const PlayersGet = () => {
               );
             };
           
+            // Sayfa yüklenmesini yapan kod parçası
+
+            useEffect(() => {
+              const timeout = setTimeout(() => {
+                  setLoading(false);
+              }, 700);
+      
+              return () => clearTimeout(timeout);
+          }, []);
+      
+          if (loading) {
+              return <div className="flex justify-content-center">
+            <ProgressSpinner style={{width: '50px', height: '50px'}} strokeWidth="8" fill="var(--surface-ground)" animationDuration=".5s" />
+          </div>;
+          }
+
+            // Sayfa yüklenmesini yapan kod parçası
 
     return (
         <div className="grid">
@@ -593,8 +611,8 @@ const PlayersGet = () => {
                         filterDisplay="menu"
                         loading={loading1}
                         emptyMessage="Oyuncu Bulunamadı."
-                        header={header1}
-                    >                        
+                        header={header1}>  
+
                         {/* <Column field="id" header="ID" style={{ minWidth: '8rem', fontWeight: 'bold'}} /> */}
                         <Column field="filePath" body={(rowData: Demo.Futbolcu) => renderImage(rowData.filePath)} header="Fotoğraf" style={{ minWidth: '5rem' }} />
                         <Column field="pName" header="Adı" style={{ minWidth: '12rem', fontWeight: 'bold'}} />
