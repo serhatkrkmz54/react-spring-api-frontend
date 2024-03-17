@@ -117,12 +117,15 @@ export const getToplamOyuncuDegeri = async () => {
 
 // Toplam Oyuncu Değeri buradan geliyor.Springte PlayersResource'de oyuncuToplamDeger mappingi ile geliyor.
 
-export const oyuncuGuncelle = async (id:any) => {
+// Oyuncu Güncelleme kısmı buradan yapılıyor.
+
+export const oyuncuGuncelle = async (id:any, formData:any) => {
   try {
-    const response = await axios.put(`${BASE_URL}/playerss/${id}`,{
+    const response = await axios.put(`${BASE_URL}/playerss/${id}`, formData, {
       headers: {
         'Content-Type': 'multipart/form-data',
       },
+            
     });
     return response.data;
   }catch (error) {
@@ -130,3 +133,5 @@ export const oyuncuGuncelle = async (id:any) => {
     throw error;
   }
 };
+
+// Oyuncu Güncelleme kısmı buradan yapılıyor.

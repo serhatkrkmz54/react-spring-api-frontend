@@ -9,7 +9,7 @@ import { InputText } from 'primereact/inputtext';
 import React, { use, useEffect, useState, useRef, Suspense } from 'react';
 import type { Demo } from '@/types';
 import { InputNumber, InputNumberValueChangeEvent } from 'primereact/inputnumber';
-import { ListBox, ListBoxChangeEvent } from 'primereact/listbox';
+import { ListBox } from 'primereact/listbox';
 import { Dropdown, DropdownChangeEvent } from 'primereact/dropdown';
 import { Toast } from 'primereact/toast';
 import { ConfirmDialog, confirmDialog } from 'primereact/confirmdialog';
@@ -32,7 +32,7 @@ const PlayersGet = () => {
     const [selectedFutbolcu, setSelectedFutbolcu] = useState(null);
     const [displayDialog, setDisplayDialog] = useState(false);
     const [loading, setLoading] = useState(true);
-
+    const [oyuncuDuzenleDialog, setOyuncuDuzenleDialog] = useState(false);
 
     const showToast = (severity:any, summary:any, detail:any,life:any) => {
         toast.current.show({ severity, summary, detail, life });
@@ -224,15 +224,6 @@ const PlayersGet = () => {
             );
         };
 
-        // const renderImage = (base64Data: string) => {
-        //   return <div style={{
-        //   borderRadius: '50%',
-        //   overflow: 'hidden',
-        //   width: '50px',
-        //   height: '50px'}}>
-        //     <img src={`data:image/png;base64,${base64Data}`} alt="Oyuncu Fotoğrafı" style={{ width: '100%', height: '100%' }} />
-        //   </div>;
-        // };
 
            const ayakSecenekler: Demo.Ayak[] = [
             { name : 'Sağ Ayak', code: 'SAA'},
@@ -266,13 +257,10 @@ const PlayersGet = () => {
               formData.append('pFoot', ayak?.toString() || '');
               formData.append('toTeams', selectedTeam?.toString() || '');
               formData.append('toCountryPlayers', selectedCountry?.toString() || '');
-        
-              // Dosya ekleme
               const fileInput = fileUploadRef.current?.files?.[0];
               if (fileInput) {
                 formData.append('pathFile', fileInput, fileInput.name);
               }
-        
               await api.postFutbolcu(formData);
               setVisible(false);
               showToast('success', 'Başarı', 'Futbolcu başarıyla eklendi!', 5000);
@@ -372,6 +360,7 @@ const PlayersGet = () => {
               setSelectedFutbolcu(null);
               setDisplayDialog(false);
             };
+
             const futbolcuDetayHeader = () => (
               <div className="inline-flex align-items-center justify-content-center gap-2">
                 <img src={`data:image/jpeg;base64,${selectedFutbolcu?.filePath}`} alt="Fotoğraf" width="40" height="40" />
@@ -428,6 +417,190 @@ const PlayersGet = () => {
 
             // Sayfa yüklenmesini yapan kod parçası
 
+            // Oyuncu düzenleme kısmı komple burası
+
+            const oyuncuDuzenleDialogAc = (rowData:any) => {
+              setSelectedFutbolcu(rowData);
+              setOyuncuDuzenleDialog(true);
+            };
+
+            const oyuncuDuzenleDialogKapat = () => {
+              setSelectedFutbolcu(null);
+              setOyuncuDuzenleDialog(false);
+            };
+
+            const oyuncuDuzenleDialogHeader = () => (
+              <div className="inline-flex align-items-center justify-content-center gap-2">
+                <img src={`data:image/jpeg;base64,${selectedFutbolcu?.filePath}`} alt="Fotoğraf" width="50" height="50" style={{ borderRadius: "50%" }} />
+                  <span className="font-bold white-space-nowrap ml-2"> {selectedFutbolcu?.pName} {selectedFutbolcu?.pSurname}</span>
+              </div>
+          );
+
+          const renderOyuncuDuzenleDialog = () => {
+            if (!selectedFutbolcu) {
+              return null;
+            }
+        
+            return (
+              <Dialog
+                visible={oyuncuDuzenleDialog}
+                onHide={oyuncuDuzenleDialogKapat}
+                header={oyuncuDuzenleDialogHeader}
+                style={{ width: '60rem' }} 
+                breakpoints={{ '960px': '75vw', '641px': '90vw' }}
+                modal 
+                className="p-fluid"
+              >
+                <form onSubmit={oyuncuDuzenleSubmit} encType="multipart/form-data">
+                  <div className="field">
+                    <label htmlFor="pName" className="font-bold">
+                      Adı
+                    </label>
+                    <InputText id="pName" placeholder="Adını giriniz" value={selectedFutbolcu.pName} onChange={(e) => setSelectedFutbolcu({...selectedFutbolcu, pName: e.target.value})} tooltip="Futbolcunun tam adını giriniz" tooltipOptions={{ position: 'bottom' }} aria-describedby="username-help" />
+                  </div>
+                  <div className="field">
+                    <label htmlFor="pSurname" className="font-bold">
+                      Soyadı
+                    </label>
+                    <InputText id="pSurname" placeholder="Soyadını giriniz" value={selectedFutbolcu.pSurname} onChange={(e) => setSelectedFutbolcu({...selectedFutbolcu, pSurname: e.target.value})} tooltip="Futbolcunun tam soyadını giriniz" tooltipOptions={{ position: 'bottom' }} aria-describedby="username-help" />
+                  </div>
+                  <div className="field">
+                    <label htmlFor="formaNo" className="font-bold">
+                      Forma Numarası
+                    </label>
+                    <InputNumber inputId="withoutgrouping" value={selectedFutbolcu.formaNo} onValueChange={(e: InputNumberValueChangeEvent) => setSelectedFutbolcu({...selectedFutbolcu, formaNo: e.value})} useGrouping={false} tooltip="Futbolcunun güncel forma numarasını giriniz" tooltipOptions={{ position: 'bottom' }} placeholder="Forma numarasını giriniz"/>
+                  </div>
+                  <div className="field">
+                    <label htmlFor="pCountry" className="font-bold">
+                      Uyruk
+                    </label>
+                    <InputText id="pCountry" placeholder="Uyruk giriniz" value={selectedFutbolcu.pCountry} onChange={(e) => setSelectedFutbolcu({...selectedFutbolcu, pCountry: e.target.value})} tooltip="Futbolcunun doğduğu ülkeyi giriniz" tooltipOptions={{ position: 'bottom' }} aria-describedby="username-help" />
+                  </div>
+                  <div className="field">
+                    <label htmlFor="pWeight" className="font-bold">
+                      Kilosu
+                    </label>
+                    <InputNumber inputId="withoutgrouping" value={selectedFutbolcu.pWeight} onValueChange={(e: InputNumberValueChangeEvent) => setSelectedFutbolcu({...selectedFutbolcu, pWeight: e.value})} useGrouping={false} tooltip="Futbolcunun kilosunu giriniz" tooltipOptions={{ position: 'bottom' }} placeholder="Kilosunu giriniz"/>
+                  </div>
+                  <div className="field">
+                    <label htmlFor="pHeight" className="font-bold">
+                      Boyu
+                    </label>
+                    <InputNumber inputId="withoutgrouping" value={selectedFutbolcu.pHeight} showButtons min={0} max={300} onValueChange={(e: InputNumberValueChangeEvent) => setSelectedFutbolcu({...selectedFutbolcu, pHeight: e.value})} tooltip="Futbolcunun boyunu tamsayı şeklinde giriniz (Örnek: 185 boyunda)" tooltipOptions={{ position: 'bottom' }} placeholder="Boyunu girin" useGrouping={false} />
+                  </div>
+                  <div className="field">
+                    <label htmlFor="pPosition" className="font-bold">
+                      Mevkisi
+                    </label>
+                    <Dropdown value={selectedFutbolcu.pPosition} onChange={(e: DropdownChangeEvent) => setSelectedFutbolcu({...selectedFutbolcu, pPosition: e.value})} options={mevkiler} optionLabel="name" optionValue='name' placeholder="Oynadığı Mevki" />
+                  </div>
+                  <div className="field">
+                    <label htmlFor="pPlayerAge" className="font-bold">
+                      Yaşı
+                    </label>
+                    <InputNumber inputId="withoutgrouping" tooltip="Futbolcunun yaşını giriniz" tooltipOptions={{ position: 'bottom' }} placeholder="Yaşını girin" value={selectedFutbolcu.pPlayerAge} onValueChange={(e: InputNumberValueChangeEvent) => setSelectedFutbolcu({...selectedFutbolcu, pPlayerAge: e.value})} useGrouping={false} />
+                  </div>
+                  <div className="field">
+                    <label htmlFor="pValue" className="font-bold">
+                      Piyasa Değeri
+                    </label>
+                    <InputNumber value={selectedFutbolcu.pValue} onValueChange={(e) => setSelectedFutbolcu({...selectedFutbolcu, pValue: e.value})} tooltip="Futbolcunun piyasa değerini örnekteki gibi giriniz" tooltipOptions={{ position: 'bottom' }} placeholder="Örnek: €50,000 <== Bin, €1,000,000 <= Milyon"/>
+                  </div>
+                  <div className="field">
+                    <label htmlFor="pFoot" className="font-bold">
+                      Oynadığı Ayak
+                    </label>
+                    <Dropdown value={selectedFutbolcu.pFoot} onChange={(e: DropdownChangeEvent) => setSelectedFutbolcu({...selectedFutbolcu, pFoot: e.value})} options={ayakSecenekler} optionLabel="name" optionValue='name' placeholder="Oynadığı Ayak" />
+                  </div>
+                  <div className="field">
+                    <label htmlFor="oyuncuHangiTakimda" className="font-bold">
+                      Oynadığı Takım
+                    </label>
+                    <ListBox
+                      value={selectedFutbolcu.toTeams}
+                      options={takimlar}
+                      onChange={(e) => setSelectedFutbolcu({...selectedFutbolcu, toTeams: e.value})}
+                      optionValue="id"
+                      optionLabel="tName" 
+                      filter
+                      placeholder="Oynadığı Takım"
+                      itemTemplate={teamsLogoTemplate}
+                    />
+                  </div>
+                  <div className="field">
+                    <label htmlFor="oyuncuHangiUlkede" className="font-bold">
+                      Milli Takımı
+                    </label>
+                    <Dropdown
+                      value={selectedFutbolcu.toCountryPlayers}
+                      onChange={(e) => setSelectedFutbolcu({...selectedFutbolcu, toCountryPlayers: e.value})}
+                      options={ulkeler}
+                      optionValue="id"
+                      optionLabel="cName"
+                      showClear 
+                      placeholder="Milli Takım Seçiniz" 
+                      className="w-full md:w-35rem" />
+                  </div>
+                  <div className="field hidden">
+                  <InputText value={selectedFutbolcu.filePath} onChange={(e) => setSelectedFutbolcu({...selectedFutbolcu, filePath: e.target.value})} />
+                  </div>
+                  <div className="field">
+                  <label htmlFor="pName" className="font-bold">
+                        Fotoğraf
+                    </label>
+                <div className="card" style={{ display: 'flex', alignItems: 'center', padding: '10px ', marginTop:'10px' }}>
+                    <div className="file-upload-wrapper" data-text="Fotoğraf Yükleyin!">
+                      <input ref={fileUploadRef} type="file" onChange={handleFileChange} className="file-upload-field" />
+                    </div>
+                    {selectedFile && (
+                        <div>
+                        {previewImage && (<img src={previewImage} alt="Dosya Önizleme" style={{ maxWidth: '100px', maxHeight: '70px',  marginRight: '50px' }} /> )}
+                        </div>
+                    )}
+                 </div>
+                  </div>
+                  <div className="field">
+                    <Button type="submit" onClick={oyuncuDuzenleSubmit} label="Güncelle"/>
+                  </div>
+                </form>
+              </Dialog>
+            );
+          };
+          const oyuncuDuzenleSubmit = async (e: React.FormEvent) => {
+          e.preventDefault();
+          const oyuncuID = selectedFutbolcu?.id;
+          
+          try {
+            const formData = new FormData();
+            formData.append('pName', selectedFutbolcu?.pName as string);
+            formData.append('pSurname', selectedFutbolcu?.pSurname as string);
+            formData.append('formaNo', selectedFutbolcu?.formaNo?.toString() || '');
+            formData.append('pCountry', selectedFutbolcu?.pCountry as string);
+            formData.append('pWeight', selectedFutbolcu?.pWeight?.toString() || '');
+            formData.append('pHeight', selectedFutbolcu?.pHeight?.toString() || '');
+            formData.append('pPosition', selectedFutbolcu?.pPosition as string);
+            formData.append('pPlayerAge', selectedFutbolcu?.pPlayerAge?.toString() || '');
+            formData.append('pValue', selectedFutbolcu?.pValue?.toString() || '');
+            formData.append('pFoot', selectedFutbolcu?.pFoot as string);
+            formData.append('toTeams', selectedFutbolcu?.toTeams || '');
+            formData.append('toCountryPlayers', selectedFutbolcu?.toCountryPlayers || '');
+            formData.append('filePath', selectedFutbolcu?.filePath || '');
+            const fileInput = fileUploadRef.current?.files?.[0];
+            if (fileInput && selectedFutbolcu?.filePath) {
+                formData.set('pathFile', fileInput, fileInput.name);
+            }
+            await api.oyuncuGuncelle(oyuncuID as number, formData);
+            oyuncuDuzenleDialogKapat();
+            showToast('success', 'Başarı', 'Futbolcu başarıyla güncellendi!', 5000);
+          } catch (error) {
+            showToast('error', 'Hata', 'Futbolcu güncellenirken bir hata oluştu.', 5000);
+            console.error('Hata oluştu:', error);
+          } 
+          };
+
+            // Oyuncu düzenleme kısmı komple burası
+
+
     return (
         <div className="grid">
             <Toast ref={toast} />
@@ -451,10 +624,6 @@ const PlayersGet = () => {
                         <Avatar image="https://img.a.transfermarkt.technology/portrait/big/191614-1698609730.png?lm=1" size="large" shape="circle" />
                         <Avatar label="+" shape="circle" size="large"/>
                     </AvatarGroup>
-                        {/* <img src="https://img.a.transfermarkt.technology/portrait/big/28396-1696447661.png?lm=1" alt="" style={{ width: '35px', height: '40px', borderRadius: '50%', overflow: 'hidden', display: 'block', marginRight: '-18px' }}/>
-                        <img src="https://img.a.transfermarkt.technology/portrait/big/28003-1694590254.jpg?lm=1" alt="" style={{ width: '35px', height: '40px', borderRadius: '50%', overflow: 'hidden', display: 'block', marginRight: '-18px' }}/>
-                        <img src="https://img.a.transfermarkt.technology/portrait/big/8198-1694609670.jpg?lm=1" alt="" style={{ width: '35px', height: '40px', borderRadius: '50%', overflow: 'hidden', display: 'block', marginRight: '-18px' }}/>
-                        <img src="https://img.a.transfermarkt.technology/portrait/big/191614-1698609730.png?lm=1" alt="" style={{ width: '35px', height: '40px', borderRadius: '50%', overflow: 'hidden', display: 'block', marginRight: '-18px' }}/> */}
                     </div>
                 </div>
             </div>
@@ -562,7 +731,6 @@ const PlayersGet = () => {
                         Oynadığı Ayak
                     </label>
                     <Dropdown value={ayak} onChange={(e: DropdownChangeEvent) => setAyak(e.value)} options={ayakSecenekler} optionLabel="name" optionValue='name' placeholder="Oynadığı Ayak" />
-                    {/* <InputText id="pFoot" placeholder="Oynadığı ayak bilgisini giriniz" value={ayak} onChange={(e) => setAyak(e.target.value)} tooltip="Futbolcunun güçlü olduğu ayağı giriniz" tooltipOptions={{ position: 'bottom' }} aria-describedby="username-help" /> */}
                 </div>
                 <div className="field">
                     <label htmlFor="oyuncuHangiTakimda" className="font-bold">
@@ -624,8 +792,11 @@ const PlayersGet = () => {
                         <Column field="oyuncuHangiTakimda" header="Takımı" style={{ minWidth: '8rem' }}/>
                         <Column body={(rowData: Demo.Futbolcu) => (<Button icon="pi pi-trash" onClick={() => oyuncuyuSil(rowData.id)} className="p-button-danger"/>)} style={{ minWidth: '5rem' }}/>
                         <Column body={(rowData) => (<Button icon="pi pi-search" onClick={() => showDetailsDialog(rowData)} /> )} />
+                        <Column body={(rowData) => (<Button icon="pi pi-pencil" onClick={() => oyuncuDuzenleDialogAc(rowData)} /> )} />
+
                     </DataTable>
                     {renderDetailsDialog()}
+                    {renderOyuncuDuzenleDialog()}
                 </div>
             </div>
             

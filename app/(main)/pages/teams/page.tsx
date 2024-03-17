@@ -94,11 +94,14 @@ const yasTemplate = (rowData: Demo.Futbolcu) => {
 const oyuncuFormaNo = (rowData: Demo.Futbolcu) => {
   if(rowData.formaNo === null || rowData.formaNo === undefined){
     return (
-      <Badge value="Yok" severity="warning" />
+      <div style={{ textAlign: "center" }}>
+        <Badge value="Yok" size="large" severity="warning" /></div>
+      // 
     );
   }else {
   return (
-  <Badge value={rowData.formaNo} size="large" severity="info" style={{ fontWeight: "bold" }} />
+    <div style={{ textAlign: "center" }}>
+  <Badge value={rowData.formaNo} size="large" severity="info" style={{ fontWeight: "bold" }} /></div>
   );}
 };
 //   const [teams, setTeams] = useState([]);
@@ -163,8 +166,8 @@ const oyuncuFormaNo = (rowData: Demo.Futbolcu) => {
 
       {selectedTeam && (
         <DataTable value={players} resizableColumns showGridlines columnResizeMode="expand" emptyMessage="Kadroya Oyuncu Eklenmemiş." tableStyle={{ minWidth: '60rem' }}>
-          <Column field="resim" header="" body={(rowData:Demo.Takim) => oyuncuLogoBase64(rowData.resim)} style={{ width: '2rem' }} />
-          <Column field="formaNo" body={oyuncuFormaNo} header="Forma" style={{ width: '4rem' }}></Column>
+          <Column field="resim" header="#" body={(rowData:Demo.Takim) => oyuncuLogoBase64(rowData.resim)} style={{ width: '2rem' }} />
+          <Column field="formaNo" body={oyuncuFormaNo} header="Forma No" style={{ width: '4rem', backgroundColor: '#D5E4EC' }}></Column>
           <Column field="adi" header="Adı"></Column>
           <Column field="soyadi" header="Soyadı"></Column>
           <Column field="ulke" header="Uyruk"></Column>
