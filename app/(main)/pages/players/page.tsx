@@ -33,6 +33,7 @@ const PlayersGet = () => {
     const [displayDialog, setDisplayDialog] = useState(false);
     const [loading, setLoading] = useState(true);
     const [oyuncuDuzenleDialog, setOyuncuDuzenleDialog] = useState(false);
+    const formRef = useRef<HTMLFormElement>(null);
 
     const showToast = (severity:any, summary:any, detail:any,life:any) => {
         toast.current.show({ severity, summary, detail, life });
@@ -84,6 +85,7 @@ const PlayersGet = () => {
 
 
     //Futbolcuların verilerini getiren kod parçası
+
     useEffect(() => {
         const loadFutbolcular = async () => {
           try {
@@ -95,12 +97,14 @@ const PlayersGet = () => {
             setLoading1(false);
           }
         };
-        loadFutbolcular();
         initFilters1();
+        loadFutbolcular();
       }, []);
+
     //Futbolcuların verilerini getiren kod parçası
 
       //Takımları getiren kod parçası
+
       useEffect(() => {
         const loadTakimlar = async () => {
           try {
@@ -112,6 +116,7 @@ const PlayersGet = () => {
         };
         loadTakimlar();
       }, []);
+
       //Takımları getiren kod parçası
 
       //Ülkeleri getiren kod parçası
@@ -131,6 +136,7 @@ const PlayersGet = () => {
       //Ülkeleri getiren kod parçası
 
       //Base64 formatındaki resmi gösteren kod parçası
+
       const renderImage = (base64Data: string) => {
         return <div style={{
         borderRadius: '50%',
@@ -140,6 +146,7 @@ const PlayersGet = () => {
           <img src={`data:image/png;base64,${base64Data}`} alt="Oyuncu Fotoğrafı" style={{ width: '100%', height: '100%' }} />
         </div>;
       };
+      
       //Base64 formatındaki resmi gösteren kod parçası
 
       const formatPValue = (value: string) => {
@@ -242,7 +249,7 @@ const PlayersGet = () => {
 
            const handleSubmit = async (e:React.FormEvent) => {
             e.preventDefault();
-        
+          
             try {
               const formData = new FormData();
               formData.append('pName', adi);
@@ -262,7 +269,22 @@ const PlayersGet = () => {
                 formData.append('pathFile', fileInput, fileInput.name);
               }
               await api.postFutbolcu(formData);
+              const fetchedData = await api.getFutbolcular();
+              setFutbolcular(fetchedData);
               setVisible(false);
+              setAdi('');
+              setSoyadi('');
+              setUyruk('');
+              setFormaNo(null);
+              setKilo(null);
+              setBoy(null);
+              setMevki(null);
+              setYas(null);
+              setDeger(null);
+              setAyak(null);
+              setSelectedTeam(null);
+              setSelectedCountry(null);
+              setPreviewImage(undefined);
               showToast('success', 'Başarı', 'Futbolcu başarıyla eklendi!', 5000);
             } catch (error) {
               showToast('error', 'Hata', 'Futbolcu eklenirken bir hata oluştu.', 5000);
@@ -592,6 +614,7 @@ const PlayersGet = () => {
             await api.oyuncuGuncelle(oyuncuID as number, formData);
             oyuncuDuzenleDialogKapat();
             showToast('success', 'Başarı', 'Futbolcu başarıyla güncellendi!', 5000);
+          
           } catch (error) {
             showToast('error', 'Hata', 'Futbolcu güncellenirken bir hata oluştu.', 5000);
             console.error('Hata oluştu:', error);
@@ -638,8 +661,8 @@ const PlayersGet = () => {
                             <i className="pi pi-euro text-black-500 text-xl" />
                         </div>
                     </div>
-                    <span className="text-green-500 font-medium">%52+ </span>
-                    <span className="text-500">geçen haftadan bu yana</span>
+                    {/* <span className="text-green-500 font-medium">%52+ </span>
+                    <span className="text-500">geçen haftadan bu yana</span> */}
                 </div>
             </div>
             <div className="col-12 lg:col-6 xl:col-3">

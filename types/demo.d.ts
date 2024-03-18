@@ -92,6 +92,23 @@ declare namespace Demo {
         toCountry: Ulkeler[];
      }
 
+    type Futbolcu = {
+        id?: number;
+        pName?: string;
+        pSurname?: string;
+        filePath?: string; 
+        formaNo?: number;
+        pValue?: number;
+        pCountry?: string;
+        pWeight?: number;
+        pHeight?: number;
+        pPosition?: string;
+        pPlayerAge?: number;
+        yas?: number;
+        pFoot?: string; 
+        toTeams?: Takim[];
+        toCountry?: Ulkeler[];
+    }
 
      interface Takim {
         id: number;
@@ -121,23 +138,6 @@ declare namespace Demo {
         visible: boolean;
         header: string;
         newTask: boolean;
-    }
-
-    interface Mail {
-        id: number;
-        from: string;
-        to: string;
-        email: string;
-        image: string;
-        title: string;
-        message: string;
-        date: string;
-        important: boolean;
-        starred: boolean;
-        trash: boolean;
-        spam: boolean;
-        archived: boolean;
-        sent: boolean;
     }
 
     interface User {
