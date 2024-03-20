@@ -33,7 +33,6 @@ const PlayersGet = () => {
     const [displayDialog, setDisplayDialog] = useState(false);
     const [loading, setLoading] = useState(true);
     const [oyuncuDuzenleDialog, setOyuncuDuzenleDialog] = useState(false);
-    const formRef = useRef<HTMLFormElement>(null);
 
     const showToast = (severity:any, summary:any, detail:any,life:any) => {
         toast.current.show({ severity, summary, detail, life });
