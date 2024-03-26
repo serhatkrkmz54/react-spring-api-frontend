@@ -22,6 +22,10 @@ declare namespace Demo {
         pFoot: string; 
         toTeams: Takim[];
         toCountry: Ulkeler[];
+        transferFee: number;
+        transferDate: string;
+        toTeam: Takim[];
+        fromTeam: Takim[];
      }
 
     type Futbolcu = {

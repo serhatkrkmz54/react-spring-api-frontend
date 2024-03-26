@@ -17,6 +17,7 @@ import * as api from '../../../api/SpringAxios';
 import { Avatar } from 'primereact/avatar';
 import { AvatarGroup } from 'primereact/avatargroup';
 import { ProgressSpinner } from 'primereact/progressspinner';
+import { Accordion, AccordionTab } from 'primereact/accordion';
 
 
 const PlayersGet = () => {
@@ -415,6 +416,17 @@ const PlayersGet = () => {
                   <p>Oynadığı Ayak: {selectedFutbolcu.pFoot}</p>
                   <p>Oynadığı Takım: {selectedFutbolcu.oyuncuHangiTakimda || "Oyuncu Boşta"}</p>
                   <p>Milli Takımı: {selectedFutbolcu?.oyuncuHangiUlkede || "Değer Girilmemiş"}</p>
+                  <Accordion activeIndex={0}>
+                      <AccordionTab header="Transfer Geçmişi">
+                        <DataTable emptyMessage="Transfer geçmişi bulunamıyor." value={selectedFutbolcu.transferGecmisi} className="p-datatable-striped">
+                          <Column field="fromTeam" header="Eski Takım" />
+                          <Column field="toTeam" header="Yeni Takım" />
+                          <Column field="transferFee"  body={(rowData: Demo.Futbolcu) => formatPValue(rowData.transferFee.toString())}  header="Transfer Ücreti" />
+                          <Column field="transferDate" header="Transfer Tarihi" />
+                          <Column field="transferType" header="Transfer Türü" />
+                          </DataTable>
+                    </AccordionTab>
+                  </Accordion>        
                   {/* Diğer detayları ekleyin */}
                 </Dialog>
               );
