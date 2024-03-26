@@ -411,7 +411,7 @@ const PlayersGet = () => {
                   <p>Boyu: {selectedFutbolcu.pHeight}</p>
                   <p>Mevkisi: {selectedFutbolcu.pPosition}</p>
                   <p>Yaşı: {selectedFutbolcu.pPlayerAge}</p>
-                  <p>Piyasa Değeri: {selectedFutbolcu.pValue}</p>
+                  <p>Piyasa Değeri: €{selectedFutbolcu.pValue}</p>
                   <p>Oynadığı Ayak: {selectedFutbolcu.pFoot}</p>
                   <p>Oynadığı Takım: {selectedFutbolcu.oyuncuHangiTakimda || "Oyuncu Boşta"}</p>
                   <p>Milli Takımı: {selectedFutbolcu?.oyuncuHangiUlkede || "Değer Girilmemiş"}</p>

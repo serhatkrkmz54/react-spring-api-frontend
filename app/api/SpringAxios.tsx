@@ -7,6 +7,7 @@ const BASE_URL = 'http://localhost:8080/api';
 export const getFutbolcular = async () => {
     try {
       const response = await axios.get(`${BASE_URL}/playerss`);
+      //  console.log(response.data[2]);
       return response.data.reverse();
     } catch (error) {
       console.error("Veri getirilirken hata oluştu:", error);

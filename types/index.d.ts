@@ -7,7 +7,6 @@ import {
     MenuProps,
     MenuModel,
     AppSubMenuProps,
-    LayoutConfig,
     LayoutState,
     AppBreadcrumbState,
     Breadcrumb,
